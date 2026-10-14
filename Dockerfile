@@ -7,7 +7,7 @@ ARG LUAJIT_LIB=/usr/lib
 
 ARG AWSLC_VER=683ebde4bf3bcc016a9a710ad6b49c0c91b59161 # v5.2.0
 
-ARG NGINX_VER=a885808aa592eea32c8064624717be3d94fbdfe7 # release-1.31.3
+ARG NGINX_VER=aaecf65316bb4af1e4f12f6a8746da2ab278c967 # release-1.31.7
 ARG DTR_VER=1.29.2
 ARG RCP_VER=1.31.2
 ARG ZNP_VER=1.30.0
@@ -65,9 +65,6 @@ RUN git-clone-commit.sh https://github.com/nginx/nginx "$NGINX_VER" /src/nginx &
     wget -q https://patch-diff.githubusercontent.com/raw/nginx/nginx/pull/689.patch -O /src/nginx/1.patch && \
     echo "73fdee62748f1624f87015a951a2480fd0d4fe566a81d92b852b51536d954b91  /src/nginx/1.patch" | sha256sum -c - && \
     git apply /src/nginx/1.patch && \
-    wget -q https://patch-diff.githubusercontent.com/raw/nginx/nginx/pull/1219.patch -O /src/nginx/2.patch && \
-    echo "156432a472e12688863783b0a7d41e22065e3308f18aab27667e7c558a893150  /src/nginx/2.patch" | sha256sum -c - && \
-    git apply /src/nginx/2.patch && \
     wget -q https://patch-diff.githubusercontent.com/raw/nginx/nginx/pull/1333.patch -O /src/nginx/3.patch && \
     echo "01bf75b130b8f91075ec913a400a8debfab6da0ac609711c7d412ddbe59dd898  /src/nginx/3.patch" | sha256sum -c - && \
     git apply /src/nginx/3.patch && \
@@ -96,9 +93,9 @@ RUN git-clone-commit.sh https://github.com/nginx/nginx "$NGINX_VER" /src/nginx &
     git-clone-commit.sh https://github.com/tokers/zstd-nginx-module "$ZNM_VER" /src/zstd-nginx-module && \
     cd /src/zstd-nginx-module && \
     wget -q https://patch-diff.githubusercontent.com/raw/tokers/zstd-nginx-module/pull/23.patch -O /src/zstd-nginx-module/1.patch && \
-    echo "7bd3c71770305ab44defe5e2768a62d870061645b095b9564d4afd57a64ad3b9  /src/zstd-nginx-module/1.patch" | sha256sum -c - && \
+    echo "10d1e564e6b8300e0357b40932ba76c45984b33f545042830b21af37c349fbf8  /src/zstd-nginx-module/1.patch" | sha256sum -c - && \
     wget -q https://patch-diff.githubusercontent.com/raw/tokers/zstd-nginx-module/pull/44.patch -O /src/zstd-nginx-module/2.patch && \
-    echo "577dc3e2d6e0378520cee6f621fa9824dd571992185cb58e2198ffa9bf814c6f  /src/zstd-nginx-module/2.patch" | sha256sum -c - && \
+    echo "12527df37f8d8757871cb8dd17d6d82a72d564c6af9d996fc7fb2abec93e4d80  /src/zstd-nginx-module/2.patch" | sha256sum -c - && \
     git apply /src/zstd-nginx-module.patch && \
     git apply /src/zstd-nginx-module/1.patch && \
     git apply /src/zstd-nginx-module/2.patch && \
@@ -259,6 +256,7 @@ RUN apk upgrade --no-cache -a && \
     luarocks-5.1 install lua-resty-http && \
     luarocks-5.1 install lua-resty-string && \
     luarocks-5.1 install lua-resty-openssl && \
+    sed -i 's|^local legacy_nids = {}$|C.ERR_clear_error()\n&|' /usr/local/share/lua/5.1/resty/openssl/pkey.lua && \
     \
     git config --global advice.detachedHead false && \
     git config --global init.defaultBranch main && \

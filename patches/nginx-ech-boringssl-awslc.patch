@@ -334,8 +334,7 @@ index e41289efb..b08bffb75 100644
 +#if !(defined OPENSSL_IS_BORINGSSL || defined OPENSSL_IS_AWSLC)
      if (OSSL_ECHSTORE_num_keys(es, &numkeys) != 1) {
          ngx_ssl_error(NGX_LOG_EMERG, ssl->log, 0,
--                      "OSSL_ECHSTORE_num_keys(%s) failed");
-+                      "OSSL_ECHSTORE_num_keys() failed");
+                       "OSSL_ECHSTORE_num_keys() failed");
          goto cleanup;
      }
  
